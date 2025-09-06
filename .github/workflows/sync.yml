@@ -3,17 +3,19 @@ name: Sync Fork with Upstream
 on:
   schedule:
     - cron: '0 0 * * *' # 每天UTC时间午夜（北京时间早上8点）运行一次
-  workflow_dispatch: # 添加此选项，允许你手动在Actions标签页中触发运行
+  workflow_dispatch: # 允许手动触发
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # 这是关键！赋予工作流写入仓库的权限，否则推送会失败
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: master # 明确检出 master 分支
 
       - name: Set up Git
         run: |
@@ -22,16 +24,13 @@ jobs:
 
       - name: Add upstream remote
         run: |
-          git remote add upstream https://github.com/10000ge10000/iptv-api
-        env:
-          ORIGINAL_OWNER: ${{ secrets.UPSTREAM_OWNER }}
-          ORIGINAL_REPOSITORY: ${{ secrets.UPSTREAM_REPO }}
+          git remote add upstream https://github.com/${{ secrets.UPSTREAM_OWNER }}/${{ secrets.UPSTREAM_REPO }}.git
 
       - name: Fetch upstream branches
         run: git fetch upstream
 
-      - name: Merge upstream main
-        run: git merge upstream/main
+      - name: Merge upstream master # 步骤名称也改了
+        run: git merge upstream/master # 这里改为 master
 
       - name: Push changes
-        run: git push origin main
+        run: git push origin master # 这里改为 master
