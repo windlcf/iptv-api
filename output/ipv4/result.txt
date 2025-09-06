@@ -1,5 +1,5 @@
 🕘️更新时间,#genre#
-2025-09-05 18:47:55,http://mg.hmysapp.cn:177/ckmg/zb.php?id=cctv1$订阅源
+2025-09-03 20:47:55,http://mg.hmysapp.cn:177/ckmg/zb.php?id=cctv1$订阅源
 
 📺央视频道,#genre#
 CCTV-1,http://mg.hmysapp.cn:177/ckmg/zb.php?id=cctv1$订阅源
