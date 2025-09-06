@@ -22,7 +22,7 @@ jobs:
 
       - name: Add upstream remote
         run: |
-          git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git
+          git remote add upstream https://github.com/10000ge10000/iptv-api
         env:
           ORIGINAL_OWNER: ${{ secrets.UPSTREAM_OWNER }}
           ORIGINAL_REPOSITORY: ${{ secrets.UPSTREAM_REPO }}
