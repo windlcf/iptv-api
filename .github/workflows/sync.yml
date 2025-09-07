@@ -31,13 +31,15 @@ jobs:
 
       - name: Merge upstream master (Prefer theirs on conflict)
         run: |
-          # 尝试合并，如果发生冲突，则自动接受上游（theirs）的更改
-          if ! git merge -X theirs upstream/master; then
-            # 如果合并失败（通常是由于冲突），检查是否有需要解决的冲突
+          # 使用允许不相关历史合并，并在冲突时选择上游版本
+          if ! git merge -X theirs upstream/master --allow-unrelated-histories; then
+            echo "合并过程出现错误（可能由于冲突），正在尝试接受上游版本解决冲突..."
+            # 检查是否有未解决的冲突文件
             if git diff --name-only --diff-filter=U | grep -q .; then
-              echo "合并冲突发生，正在强制接受上游版本 (theirs)..."
-              # 列出所有冲突文件并强制检出上游版本
+              echo "发现冲突文件，正在强制接受上游版本..."
+              # 遍历所有冲突文件，使用上游版本
               git diff --name-only --diff-filter=U | while read -r file; do
+                echo "解决冲突: $file (使用上游版本)"
                 git checkout --theirs "$file"
                 git add "$file"
               done
@@ -45,11 +47,12 @@ jobs:
               git commit -m "Merge upstream/master: Resolved conflicts by accepting upstream changes"
               echo "冲突已解决并提交。"
             else
-              # 合并失败但并非由于冲突，可能是其他错误，退出并报错
+              echo "合并失败并非由于文件冲突，请检查其他错误。"
               exit 1
             fi
+          else
+            echo "合并成功完成。"
           fi
-          echo "合并成功完成。"
 
       - name: Push changes to origin
         run: git push origin master
